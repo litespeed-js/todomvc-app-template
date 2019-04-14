@@ -1,19 +1,28 @@
-# TodoMVC App Template
+# Litespeed.js • [TodoMVC](http://todomvc.com)
 
-> Template used for creating [TodoMVC](http://todomvc.com) apps
-
-![](https://github.com/tastejs/todomvc-app-css/raw/master/screenshot.png)
+> Official description of the framework (from its website)
 
 
-## Getting started
+## Resources
 
-- Read the [Application Specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md) before touching the template.
+- [Website](https://github.com/litespeed-js/litespeed.js)
+- [Documentation](https://github.com/litespeed-js/litespeed.js/blob/master/docs/get-started.md)
 
-- Delete this file and rename `app-readme.md` to `readme.md` and fill it out.
+### Articles
 
-- Clone this repo and install the dependencies with [npm](https://npmjs.com) by running: `npm install`.
+- [Interesting article]()
+
+### Support
+
+- [Stack Overflow](http://stackoverflow.com/questions/tagged/litespeed)
+- [Twitter](http://twitter.com/__)
 
 
-## License
+## Implementation
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" rel="dct:type">work</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://sindresorhus.com" property="cc:attributionName" rel="cc:attributionURL">TasteJS</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/deed.en_US">Creative Commons Attribution 4.0 International License</a>.
+How was the app created? Anything worth sharing about the process of creating the app? Any spec violations?
+
+
+## Credit
+
+Created by [Eldad Fux](https://twitter.com/eldadfux)
