@@ -6,7 +6,7 @@
     window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
 
     window.Demo.container.get('router')
-        .add('', {
+        .add('', { // Default
             controller: function (tasks) {
                 tasks.showAll();
             }
@@ -43,22 +43,15 @@
                     }
                 },
                 toggle: function (value) {
-                    /*this.list.forEach(function(task) {
-                        task.completed = value;
-                    });*/
-
                     let list = [];
 
-                    for(let i = 0; i < this.list.length; i++) {
-                        let task = Object.assign({}, this.list[i]);
-
-                        task.completed = value;
-
-                        list.push(task);
-                    }
+                    this.list.forEach(function(task) {
+                        let node = Object.assign({}, task);
+                        node.completed = value;
+                        list.push(node);
+                    });
 
                     this.list = list;
-
                     list = null;
                 },
                 showAll: function () {
@@ -85,9 +78,6 @@
     };
 
     window.Demo.container.get('filter')
-        .add('completed', function ($value) {
-            return ($value) ? 'completed' : '';
-        })
         .add('show', function ($value, tasks) {
             $value = JSON.parse($value);
 
@@ -99,6 +89,9 @@
             }
 
             return true;
+        })
+        .add('completed', function ($value) {
+            return ($value) ? 'completed' : '';
         })
         .add('pluralize', function ($value) {
             return $value + ' ' + (('1' === $value) ? 'item' : 'items') + ' left';
