@@ -11,13 +11,6 @@
 <section class="todoapp" data-ls-scope="">
 	<header class="header">
 		<h1>todos</h1>
-		<!--<h1 data-ls-bind="{{tasks.title}}">-&#45;&#45;</h1>
-		<input type="text" data-ls-bind="{{tasks.title}}" title="">-->
-		<!--<textarea data-ls-bind="{{tasks.list}}" title=""></textarea>-->
-
-		<!--<select data-ls-loop="tasks.list" data-ls-as="task">
-			<option data-ls-attrs="value=completed-{{task.completed}}" data-ls-bind="{{task.title}}"></option>
-		</select>-->
 		<form data-tasks-add>
 			<input name="task" type="text" autocomplete="off" required class="new-todo" placeholder="What needs to be done?" autofocus>
 		</form>
@@ -27,7 +20,7 @@
 		<label for="toggle-all">Mark all as complete</label>
 
 		<ul class="todo-list" data-ls-loop="tasks.list" data-ls-as="task">
-			<li data-ls-attrs="class={{task.completed|completed}}" data-tasks-edit="{{task.id}}" data-ls-if="true == {{task.completed|show}}">
+			<li data-ls-attrs="class={{task.completed|completed}}" data-tasks-edit="{{task.id}}" data-ls-if="true == {{task.completed|show}} && '{{tasks.filter}}'">
 				<div class="view">
 					<input class="toggle" type="checkbox" data-ls-bind="{{task.completed}}">
 					<label data-ls-bind="{{task.title}}"></label>
@@ -38,9 +31,7 @@
 		</ul>
 	</section>
 	<footer class="footer">
-		<!-- This should be `0 items left` by default -->
 		<span class="todo-count"><strong data-ls-bind="{{tasks.remaining|pluralize}}"></strong></span>
-		<!-- Remove this if you don't implement routing -->
 		<ul class="filters">
 			<li>
 				<a href="" data-tasks-selected="">All</a>
@@ -52,7 +43,7 @@
 				<a href="#completed" data-tasks-selected="#completed">Completed</a>
 			</li>
 		</ul>
-		<button data-ls-if="0 < {{tasks.list.length}}" class="clear-completed" data-tasks-clear-completed>Clear completed</button>
+		<button data-ls-if="0 < ({{tasks.list.length}} - {{tasks.remaining}})" class="clear-completed" data-tasks-clear-completed>Clear completed</button>
 	</footer>
 </section>
 <footer class="info">

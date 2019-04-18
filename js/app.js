@@ -5,25 +5,20 @@
 
     window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
 
-    let state = window.Demo.container.get('state');
-
-    state
+    window.Demo.container.get('router')
         .add('', {
             controller: function (tasks) {
                 tasks.showAll();
-                document.dispatchEvent(new CustomEvent('tasks.list.changed'));
             }
         })
         .add('#completed', {
             controller: function (tasks) {
                 tasks.showCompleted();
-                document.dispatchEvent(new CustomEvent('tasks.list.changed'));
             }
         })
         .add('#active', {
             controller: function (tasks) {
                 tasks.showActive();
-                document.dispatchEvent(new CustomEvent('tasks.list.changed'));
             }
         })
     ;
@@ -42,15 +37,29 @@
                 },
                 remove: function (key) {
                     for(let i = 0; i < this.list.length; i++) {
-                        if (this.list[i].id == key) {
+                        if (this.list[i].id === key) {
                             return this.list.splice(i, 1);
                         }
                     }
                 },
                 toggle: function (value) {
-                    this.list.forEach(function(task) {
+                    /*this.list.forEach(function(task) {
                         task.completed = value;
-                    });
+                    });*/
+
+                    let list = [];
+
+                    for(let i = 0; i < this.list.length; i++) {
+                        let task = Object.assign({}, this.list[i]);
+
+                        task.completed = value;
+
+                        list.push(task);
+                    }
+
+                    this.list = list;
+
+                    list = null;
                 },
                 showAll: function () {
                     this.filter = 'all';
@@ -71,24 +80,18 @@
     ;
 
     window.Demo.container.get('tasks').__watch = function(tasks) {
-        //localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks.list))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks.list));
         tasks.remaining = tasks.list.filter(function (task) {return (!task.completed)}).length;
     };
 
     window.Demo.container.get('filter')
         .add('completed', function ($value) {
-            if($value) {
-                return 'completed';
-            }
-
-            return '';
+            return ($value) ? 'completed' : '';
         })
         .add('show', function ($value, tasks) {
             $value = JSON.parse($value);
 
             switch (tasks.filter) {
-                case 'all':
-                    return true;
                 case 'completed':
                     return $value;
                 case 'active':
@@ -98,11 +101,7 @@
             return true;
         })
         .add('pluralize', function ($value) {
-            if ('1' === $value) {
-                return $value + ' item left';
-            }
-
-            return $value + ' items left';
+            return $value + ' ' + (('1' === $value) ? 'item' : 'items') + ' left';
         })
     ;
 
@@ -110,14 +109,9 @@
         .add({
             selector: 'data-tasks-add',
             controller: function(element, tasks) {
-                element.addEventListener('submit', function () {
+                element.addEventListener('submit', function (event) {
                     event.preventDefault();
-
-                    tasks.add({
-                        completed: false,
-                        title: element.task.value
-                    });
-
+                    tasks.add({completed: false, title: element.task.value});
                     element.reset();
                 });
             }
@@ -169,9 +163,7 @@
                 });
 
                 input.addEventListener('keydown', function (e) {
-                    let key = e.which || e.keyCode;
-
-                    if (key === ENTER_KEY) {
+                    if (e.which || e.keyCode === ENTER_KEY) {
                         element.classList.remove('editing');
                     }
 
@@ -183,11 +175,11 @@
         })
         .add({
             selector: 'data-tasks-selected',
-            controller: function(element) {
+            controller: function(element, router) {
                 let filter = element.dataset['tasksSelected'] || '';
 
                 let check = function () {
-                    if(filter === state.hash) {
+                    if(filter === router.hash) {
                         element.classList.add('selected');
                     }
                     else {
