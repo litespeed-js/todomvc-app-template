@@ -11,12 +11,19 @@
 <section class="todoapp" data-ls-scope="">
 	<header class="header">
 		<h1>todos</h1>
+		<!--<h1 data-ls-bind="{{tasks.title}}">-&#45;&#45;</h1>
+		<input type="text" data-ls-bind="{{tasks.title}}" title="">-->
+		<!--<textarea data-ls-bind="{{tasks.list}}" title=""></textarea>-->
+
+		<!--<select data-ls-loop="tasks.list" data-ls-as="task">
+			<option data-ls-attrs="value=completed-{{task.completed}}" data-ls-bind="{{task.title}}"></option>
+		</select>-->
 		<form data-tasks-add>
 			<input name="task" type="text" autocomplete="off" required class="new-todo" placeholder="What needs to be done?" autofocus>
 		</form>
 	</header>
 	<section class="main" data-ls-if="0 < {{tasks.list.length}}">
-		<input id="toggle-all" class="toggle-all" type="checkbox">
+		<input id="toggle-all" class="toggle-all" type="checkbox" data-tasks-complete-all>
 		<label for="toggle-all">Mark all as complete</label>
 
 		<ul class="todo-list" data-ls-loop="tasks.list" data-ls-as="task">
@@ -32,17 +39,17 @@
 	</section>
 	<footer class="footer">
 		<!-- This should be `0 items left` by default -->
-		<span class="todo-count"><strong data-ls-bind="{{tasks.remaining|remaining}}"></strong></span>
+		<span class="todo-count"><strong data-ls-bind="{{tasks.remaining|pluralize}}"></strong></span>
 		<!-- Remove this if you don't implement routing -->
 		<ul class="filters">
 			<li>
-				<a href="/todomvc-app-template/" data-tasks-selected="">All</a>
+				<a href="" data-tasks-selected="">All</a>
 			</li>
 			<li>
-				<a href="/todomvc-app-template/#active" data-tasks-selected="#active">Active</a>
+				<a href="#active" data-tasks-selected="#active">Active</a>
 			</li>
 			<li>
-				<a href="/todomvc-app-template/#completed" data-tasks-selected="#completed">Completed</a>
+				<a href="#completed" data-tasks-selected="#completed">Completed</a>
 			</li>
 		</ul>
 		<button data-ls-if="0 < {{tasks.list.length}}" class="clear-completed" data-tasks-clear-completed>Clear completed</button>

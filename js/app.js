@@ -1,27 +1,26 @@
 (function (window) {
     "use strict";
 
-    let ENTER_KEY = 13;
-    let STORAGE_KEY = 'todos-litespeed-0.2';
+    let ENTER_KEY = 13, STORAGE_KEY = 'todos-litespeed-0.2';
 
-    window.Demo = app('v1.0.0'); // Init app and set cache buster value
+    window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
 
     let state = window.Demo.container.get('state');
 
     state
-        .add('/todomvc-app-template/', {
+        .add('', {
             controller: function (tasks) {
                 tasks.showAll();
                 document.dispatchEvent(new CustomEvent('tasks.list.changed'));
             }
         })
-        .add('/todomvc-app-template/#completed', {
+        .add('#completed', {
             controller: function (tasks) {
                 tasks.showCompleted();
                 document.dispatchEvent(new CustomEvent('tasks.list.changed'));
             }
         })
-        .add('/todomvc-app-template/#active', {
+        .add('#active', {
             controller: function (tasks) {
                 tasks.showActive();
                 document.dispatchEvent(new CustomEvent('tasks.list.changed'));
@@ -42,19 +41,15 @@
                     this.list.push(task);
                 },
                 remove: function (key) {
-                    let scope = this;
-                    this.list.forEach(function(task, index) {
-                        if(task.id === key) {
-                            return scope.list.splice(index, 1);
+                    for(let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == key) {
+                            return this.list.splice(i, 1);
                         }
-                    });
+                    }
                 },
-                save: function() {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list))
-                },
-                completeAll: function () {
+                toggle: function (value) {
                     this.list.forEach(function(task) {
-                        task.completed = true;
+                        task.completed = value;
                     });
                 },
                 showAll: function () {
@@ -67,24 +62,16 @@
                     this.filter = 'active';
                 },
                 clearCompleted: function () {
-                    let scope = this;
-                    let list = this.list;
-
-                    for(let i = 0; i < list.length; i++) {
-                        let task = list[i];
-
-                        if(task.completed === true) {
-                            scope.remove(task.id);
-                            --i;
-                        }
-                    }
+                    this.list = this.list.filter(function (task) {
+                        return !task.completed;
+                    })
                 }
             }
         }, true)
     ;
 
     window.Demo.container.get('tasks').__watch = function(tasks) {
-        tasks.save();
+        //localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks.list))
         tasks.remaining = tasks.list.filter(function (task) {return (!task.completed)}).length;
     };
 
@@ -110,7 +97,7 @@
 
             return true;
         })
-        .add('remaining', function ($value) {
+        .add('pluralize', function ($value) {
             if ('1' === $value) {
                 return $value + ' item left';
             }
@@ -139,7 +126,6 @@
             selector: 'data-tasks-remove',
             controller: function(element, tasks, expression) {
                 let id = expression.parse(element.dataset['tasksRemove']);
-
                 element.addEventListener('click', function () {
                     tasks.remove(id);
                 });
@@ -149,7 +135,7 @@
             selector: 'data-tasks-complete-all',
             controller: function(element, tasks) {
                 element.addEventListener('click', function () {
-                    tasks.completeAll();
+                    tasks.toggle(element.checked);
                 });
             }
         })
@@ -164,7 +150,8 @@
         .add({
             selector: 'data-tasks-edit',
             controller: function(element, tasks, expression) {
-                let id = parseInt(expression.parse(element.dataset['tasksEdit']));
+                let id = expression.parse(element.dataset['tasksEdit']);
+                let input = element.getElementsByClassName('edit')[0];
 
                 element.addEventListener('dblclick', function () {
                     if(element.classList.contains('editing')) {
@@ -172,25 +159,24 @@
                     }
                     else {
                         element.classList.add('editing');
-                        let input = element.getElementsByClassName('edit')[0];
 
                         input.focus();
+                    }
+                });
 
-                        input.addEventListener('blur', function () {
-                            element.classList.remove('editing');
-                        });
+                input.addEventListener('blur', function () {
+                    element.classList.remove('editing');
+                });
 
-                        input.addEventListener('input', function (e) {
-                            let key = e.which || e.keyCode;
-                            if (key === ENTER_KEY) {
-                                element.classList.remove('editing');
-                            }
+                input.addEventListener('keydown', function (e) {
+                    let key = e.which || e.keyCode;
 
-                            if(input.value === '') {
-                                tasks.remove(id);
-                                element.classList.remove('editing');
-                            }
-                        });
+                    if (key === ENTER_KEY) {
+                        element.classList.remove('editing');
+                    }
+
+                    if(input.value === '') {
+                        tasks.remove(id);
                     }
                 });
             }
