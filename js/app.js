@@ -3,9 +3,7 @@
 
     let ENTER_KEY = 13, STORAGE_KEY = 'todos-litespeed-0.2';
 
-    window.Demo = window.ls.app('v1.0.0'); // Init app and set cache buster value
-
-    window.Demo.container.get('router')
+    window.ls.router
         .add('', { // Default
             controller: function (tasks) {
                 tasks.showAll();
@@ -23,7 +21,7 @@
         })
     ;
 
-    window.Demo.container
+    window.ls.container
         .set('tasks', function () {
             let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             return {
@@ -72,12 +70,12 @@
         }, true)
     ;
 
-    window.Demo.container.get('tasks').__watch = function(tasks) {
+    window.ls.container.get('tasks').__watch = function(tasks) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks.list));
         tasks.remaining = tasks.list.filter(function (task) {return (!task.completed)}).length;
     };
 
-    window.Demo.container.get('filter')
+    window.ls.filter
         .add('show', function ($value, tasks) {
             $value = JSON.parse($value);
 
@@ -98,7 +96,7 @@
         })
     ;
 
-    window.Demo.container.get('view')
+    window.ls.view
         .add({
             selector: 'data-tasks-add',
             controller: function(element, tasks) {
@@ -187,6 +185,6 @@
         })
     ;
 
-    window.Demo.run(window);
+    window.ls.run(window);
 
 }(window));
