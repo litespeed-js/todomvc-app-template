@@ -1,7 +1,7 @@
 (function (window) {
     "use strict";
 
-    let ENTER_KEY = 13, STORAGE_KEY = 'todos-litespeed-0.2';
+    let ENTER_KEY = 13, ESCAPE_KEY = 27, STORAGE_KEY = 'todos-litespeed-0.2';
 
     window.ls.router
         .add('', { // Default
@@ -154,7 +154,7 @@
                 });
 
                 input.addEventListener('keydown', function (e) {
-                    if (e.which || e.keyCode === ENTER_KEY) {
+                    if ((e.which === ENTER_KEY) || (e.which === ESCAPE_KEY)) {
                         element.classList.remove('editing');
                     }
 
